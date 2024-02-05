@@ -43,4 +43,9 @@ public class ProductRepository {
         productData.set(index, product);
         return product;
     }
+
+    public void deleteProduct(String id) {
+        int index = findIndexById(id);
+        productData.remove(index);
+    }
 }

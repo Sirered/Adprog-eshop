@@ -22,7 +22,10 @@
         <tr th:each="product: ${products}">
             <td th:text="${product.productName}"></td>
             <td th:text="${product.productQuantity}"></td>
-            <td> <a th:href="@{/product/edit(productId=${product.productId})}" class="btn btn-primary btn-sm mb-3">Edit Product</a></td>
+            <td>
+                <a th:href="@{/product/edit(productId=${product.productId})}" class="btn btn-primary btn-sm mb-3">Edit Product</a>
+                <a th:href="@{/product/delete(productId=${product.productId})}" class="btn btn-primary btn-sm mb-3">Delete Product</a>
+            </td>
         </tr>
         </tbody>
     </table>
