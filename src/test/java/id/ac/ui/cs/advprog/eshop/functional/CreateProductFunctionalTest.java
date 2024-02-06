@@ -68,8 +68,9 @@ public class CreateProductFunctionalTest {
         submitButton.click();
 
         //checks if the submit button reroutes to the product list
-        String pageTitle = driver.getTitle();
-        assertEquals("Product List", pageTitle);
+        String currentUrl = driver.getCurrentUrl();
+        String expectedUrl = String.format("%s:%d/product/list", testBaseUrl, serverPort);
+        assertEquals(expectedUrl, currentUrl);
     }
     @Test
     void creatingProductTest(ChromeDriver driver) throws  Exception {
@@ -92,8 +93,9 @@ public class CreateProductFunctionalTest {
         submitButton.click();
 
         //checks if the submit button reroutes to the product list
-        String pageTitle = driver.getTitle();
-        assertEquals("Product List", pageTitle);
+        String currentUrl = driver.getCurrentUrl();
+        String expectedUrl = String.format("%s:%d/product/list", testBaseUrl, serverPort);
+        assertEquals(expectedUrl, currentUrl);
 
         //checks table for created product
         List<WebElement> cells = driver.findElements(By.tagName("td"));
