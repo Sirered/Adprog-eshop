@@ -32,8 +32,7 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public Product findProductById(String id) {
         int index = productRepository.findIndexById(id);
-        Product product = productRepository.findProductByIndex(index);
-        return product;
+        return productRepository.findProductByIndex(index);
     }
 
     @Override
