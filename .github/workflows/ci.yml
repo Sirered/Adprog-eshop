@@ -9,6 +9,8 @@ jobs:
     name: Run tests
     runs-on: ubuntu-22.04
     steps:
+      - name: Set gradlew as executable
+        run: chmod +x ./gradlew
       - name: Check out the Git repository
         uses: actions/checkout@v4
       - name: Set up Java toolchain
@@ -19,5 +21,3 @@ jobs:
           cache: "gradle"
       - name: Run unit tests
         run: ./gradlew test
-      - name: Set gradlew as executable
-        run: chmod +x ./gradlew
