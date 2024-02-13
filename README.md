@@ -1,4 +1,5 @@
 # 2206046696 - Galih Ibrahim Kurniawan
+## Link: https://adprog-eshop-sirered.koyeb.app/product/list
 __________________________________________
 ## Module 1
 ### Reflection 1
@@ -27,7 +28,9 @@ Overall putting the tests for checking number of items in the product list in a 
 
 __________________________________________
 ## Module 2
+**Link:** https://adprog-eshop-sirered.koyeb.app/product/list
 **Code coverage changes**
+
 Repository: 89% -> 100%
 ### Reflection
 #### Part 1: Problems with my code according to PMD and the fixes
@@ -47,4 +50,6 @@ The methods defined in the interface are public by default, thus adding the 'pub
 
 This problem occurs, because the class only has one method, and it's static. I did not fix this problem, because that class is from the application being made with Spring Boot and the suggested 'quick' fixes are somewhat problematic. Creating a private Constructor for a class that is never constructed feels like something that goes against code cleanliness. Making it abstract causes problems when testing. Hence I just let it be
 
-#### Part 2:
+#### Part 2: CI/CD
+
+Overall, I believe I have successfully implemented CI/CD. The definition of Continuous Integration is the automation of integrating any changes in code to a shared repository, mainly building and testing the program. With the use of the defined testclasses, the defined gradle test task that runs those test classes and the ci.yml that instantly runs those tests upon every push, any code changes pushed is indeed tested to make sure all functionality still remains consistent even after the changes. Furthermore with the use of external services like Scorecard and PMD along with yml files that instantly run those services upon every push, my code's quality is also automatically checked. Hence, due to these workflows, I hold the opinion that I have successfully implemented Continuous Integration. As for Continuous Deployment, its definition is the deploying code changes to product environments, so any changes can be accessed and tested by users asap, so they can give appropriate feedback to the developers. With the use of Koyeb's services that deploys the app via Koyeb on every push on main, I think I have successfully implemented Continuous Deployment. Since I have implemented both Continuous Integration and Continuous Deployment, I have successfully implemented CI/CD
