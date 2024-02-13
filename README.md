@@ -30,9 +30,21 @@ __________________________________________
 **Code coverage changes**
 Repository: 89% -> 100%
 ### Reflection
-#### Problems with my code according to PMD and the fixes
+#### Part 1: Problems with my code according to PMD and the fixes
 **UnusedImport 'org.springframework.web.bind.annotation.*' in the Controller Class**
-The reason as why this was a problem, was because this imported all annotations from that package, due to the use of the '*', despite the fact that not all annotations were used. Thus to fix it I removed that line and wrote the import statement for each of the annotations I was using from that package (which were PostMapping, GetMapping, RequestMapping, ModelAttribute and RequestParam), thus only importing what I needed
+
+The reason as to why this was a problem, was because this imported all annotations from that package, due to the use of the '*', despite the fact that not all annotations were used. Thus to fix it I removed that line and wrote the import statement for each of the annotations I was using from that package (which were PostMapping, GetMapping, RequestMapping, ModelAttribute and RequestParam), thus only importing what I needed
 
 **UnnecessaryLocalBeforeReturn in the ServiceImpl Class**
-For my 
+
+I have a function in my ServiceImpl class called findProductById, which combines my findIndexById and findProductByIndex functions. Initially I had run those 2 functions and stored the result of the findProductByIndex function into a local variable called product, before returning that variable, which was what was causing that segment to be smelly. Thus to combat it, I just instantly returned the result of the findProductByIndex function instead
+
+**UnnecessaryModifier 'public' on the Service Interface**
+
+The methods defined in the interface are public by default, thus adding the 'public' mnodifier is unnecessary. I just had to remove the public modifiers from the methods of the interface
+
+**UseUtilityClass in the Application Class**
+
+This problem occurs, because the class only has one method, and it's static. I did not fix this problem, because that class is from the application being made with Spring Boot and the suggested 'quick' fixes are somewhat problematic. Creating a private Constructor for a class that is never constructed feels like something that goes against code cleanliness. Making it abstract causes problems when testing. Hence I just let it be
+
+#### Part 2:
