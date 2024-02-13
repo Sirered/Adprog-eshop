@@ -24,3 +24,15 @@ Just having a code coverage of 100% does not mean that the code 100% works, it j
 
 #### Part 2
 Overall putting the tests for checking number of items in the product list in a new test suite with the same setup and variables will overall decrease code cleanliness. This is because having a different test suite for it would just cause unnecessary duplication where everything except the few tests there are will be exactly the same as the HomePageFunctionalTest suite. This would cause confusion due to the fact that the test for the product list on the Home Page is separate from the rest of the tests about the Home Page. One might say that putting this test in a new class would be good due to separation of concerns, even if they relate to the same page, but I think that should only be applicable for pages that have multiple at most semi-related functions and sections within, not a simple page with only a list of products a few buttons and a header. Furthermore, it would be harder to maintain the different test suites with the exact same setup, because if there are any changes that must occur in the setup and instance variables in one suite, it is likely you will have to make the same exact changes in the other suite. This may just be a minor convenience for now since the setup isn't too long and there are only 2 suites with the same setup, but if we were to add more functionality to the home page that is related to the product list and we were to make new test suites for the new features, it would inevitably result in a real pain to deal with if any of the setup needed to be changed. It would be a lot cleaner if the test for product list is in the test suite with the other tests that check the home page, so all related tests will be together and to reduce the redundancy that would be caused from having an entirely separate class with the same function.
+
+__________________________________________
+## Module 2
+**Code coverage changes**
+Repository: 89% -> 100%
+### Reflection
+#### Problems with my code according to PMD and the fixes
+**UnusedImport 'org.springframework.web.bind.annotation.*' in the Controller Class**
+The reason as why this was a problem, was because this imported all annotations from that package, due to the use of the '*', despite the fact that not all annotations were used. Thus to fix it I removed that line and wrote the import statement for each of the annotations I was using from that package (which were PostMapping, GetMapping, RequestMapping, ModelAttribute and RequestParam), thus only importing what I needed
+
+**UnnecessaryLocalBeforeReturn in the ServiceImpl Class**
+For my 
