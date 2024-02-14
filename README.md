@@ -29,6 +29,7 @@ Overall putting the tests for checking number of items in the product list in a 
 __________________________________________
 ## Module 2
 **Link:** https://adprog-eshop-sirered.koyeb.app/product/list
+
 **Code coverage changes**
 
 Repository: 89% -> 100%
