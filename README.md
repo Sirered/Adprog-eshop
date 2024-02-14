@@ -32,6 +32,13 @@ __________________________________________
 **Code coverage changes**
 
 Repository: 89% -> 100%
+
+ServiceImpl: 5% -> 100%
+
+Controller: 5% -> 100%
+
+Overall: less than 50% -> 97%
+
 ### Reflection
 #### Part 1: Problems with my code according to PMD and the fixes
 **UnusedImport 'org.springframework.web.bind.annotation.*' in the Controller Class**
