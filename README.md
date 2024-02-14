@@ -40,6 +40,8 @@ Controller: 5% -> 100%
 
 Overall: less than 50% -> 97%
 
+![image](https://github.com/Sirered/Adprog-eshop/assets/126568984/43c5602f-ecb6-4fd5-abc2-7c5f71a4a8c2)
+
 ### Reflection
 #### Part 1: Problems with my code according to PMD and the fixes
 **UnusedImport 'org.springframework.web.bind.annotation.*' in the Controller Class**
