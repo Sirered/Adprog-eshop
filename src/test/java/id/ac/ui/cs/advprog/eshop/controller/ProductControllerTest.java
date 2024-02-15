@@ -1,6 +1,8 @@
 package id.ac.ui.cs.advprog.eshop.controller;
 
 import id.ac.ui.cs.advprog.eshop.model.Product;
+import id.ac.ui.cs.advprog.eshop.service.CarService;
+import id.ac.ui.cs.advprog.eshop.service.CarServiceImpl;
 import id.ac.ui.cs.advprog.eshop.service.ProductService;
 import id.ac.ui.cs.advprog.eshop.service.ProductServiceImpl;
 import org.junit.jupiter.api.*;
@@ -26,6 +28,9 @@ class ProductControllerTest {
 
     @InjectMocks
     private ProductController productController;
+
+    @MockBean
+    private CarServiceImpl carService;
 
     @Mock
     private ProductService service;
