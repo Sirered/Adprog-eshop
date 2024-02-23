@@ -20,11 +20,16 @@
         </thead>
         <tbody>
         <tr th:each="product: ${products}">
-            <td th:text="${product.productName}"></td>
-            <td th:text="${product.productQuantity}"></td>
+            <td th:text="${product.name}"></td>
+            <td th:text="${product.quantity}"></td>
             <td>
-                <a th:href="@{/product/edit(productId=${product.productId})}" class="btn btn-primary btn-sm mb-3">Edit Product</a>
-                <a th:href="@{/product/delete(productId=${product.productId})}" class="btn btn-primary btn-sm mb-3">Delete Product</a>
+                <a th:href="@{/product/edit(productId=${product.id})}" class="btn btn-primary btn-sm mb-3">Edit Product</a>
+            </td>
+            <td>
+                <form th:action="@{/product/delete}" method="post">
+                    <input type="hidden" name="productId" th:value="${product.id}" />
+                    <button type="submit" class="btn btn-primary btn-sm mb-3">Delete Product</button>
+                </form>
             </td>
         </tr>
         </tbody>

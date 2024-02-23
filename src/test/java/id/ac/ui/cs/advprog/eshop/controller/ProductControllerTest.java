@@ -1,10 +1,7 @@
 package id.ac.ui.cs.advprog.eshop.controller;
 
 import id.ac.ui.cs.advprog.eshop.model.Product;
-import id.ac.ui.cs.advprog.eshop.service.CarService;
-import id.ac.ui.cs.advprog.eshop.service.CarServiceImpl;
-import id.ac.ui.cs.advprog.eshop.service.ProductService;
-import id.ac.ui.cs.advprog.eshop.service.ProductServiceImpl;
+import id.ac.ui.cs.advprog.eshop.service.*;
 import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -30,16 +27,16 @@ class ProductControllerTest {
     private ProductController productController;
 
     @MockBean
-    private CarServiceImpl carService;
+    private CarSellerService carService;
 
     @Mock
-    private ProductService service;
+    private SellerService<Product> service;
 
     @Mock
     private Model model;
 
     @MockBean
-    private ProductServiceImpl productService;
+    private ProductSellerServiceImpl productService;
 
     @Nested
     @DisplayName("GET Requests")
@@ -56,19 +53,19 @@ class ProductControllerTest {
         @Test
         void testProductListPage() throws Exception {
             Product product1 = new Product();
-            product1.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
-            product1.setProductName("Sampo Cap Bambang");
-            product1.setProductQuantity(100);
+            product1.setId("eb558e9f-1c39-460e-8860-71af6af63bd6");
+            product1.setName("Sampo Cap Bambang");
+            product1.setQuantity(100);
 
             Product product2 = new Product();
-            product2.setProductId("a0f9de46-90b1-437d-a0bf-d0821dde9096");
-            product2.setProductName("Sampo Cap Usep");
-            product2.setProductQuantity(50);
+            product2.setId("a0f9de46-90b1-437d-a0bf-d0821dde9096");
+            product2.setName("Sampo Cap Usep");
+            product2.setQuantity(50);
 
             Product product3 = new Product();
-            product3.setProductId("2ff6edb4-5527-4b17-bbdf-92724b61864b");
-            product3.setProductName("Sampo Cap Asap");
-            product3.setProductQuantity(25);
+            product3.setId("2ff6edb4-5527-4b17-bbdf-92724b61864b");
+            product3.setName("Sampo Cap Asap");
+            product3.setQuantity(25);
 
             List<Product> productList = new ArrayList<>();
             productList.add(product1);
@@ -88,11 +85,11 @@ class ProductControllerTest {
         @Test
         void testEditProductPage() throws Exception {
             Product product = new Product();
-            product.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
-            product.setProductName("Sampo Cap Bambang");
-            product.setProductQuantity(100);
+            product.setId("eb558e9f-1c39-460e-8860-71af6af63bd6");
+            product.setName("Sampo Cap Bambang");
+            product.setQuantity(100);
 
-            when(productService.findProductById("eb558e9f-1c39-460e-8860-71af6af63bd6")).thenReturn(product);
+            when(productService.findById("eb558e9f-1c39-460e-8860-71af6af63bd6")).thenReturn(product);
 
             mockMvc.perform(MockMvcRequestBuilders.get("/product/edit")
                             .param("productId", "eb558e9f-1c39-460e-8860-71af6af63bd6")
@@ -100,18 +97,7 @@ class ProductControllerTest {
                     .andExpect(MockMvcResultMatchers.view().name("EditProduct"))
                     .andExpect(MockMvcResultMatchers.model().attribute("product", product));
 
-            verify(productService, times(1)).findProductById("eb558e9f-1c39-460e-8860-71af6af63bd6");
-        }
-
-        @Test
-        void testDelete() throws Exception {
-
-            mockMvc.perform(MockMvcRequestBuilders.get("/product/delete")
-                    .param("productId", "eb558e9f-1c39-460e-8860-71af6af63bd6")
-            ).andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                    .andExpect(MockMvcResultMatchers.redirectedUrl("list"));
-
-            verify(productService, times(1)).delete("eb558e9f-1c39-460e-8860-71af6af63bd6");
+            verify(productService, times(1)).findById("eb558e9f-1c39-460e-8860-71af6af63bd6");
         }
     }
 
@@ -119,11 +105,21 @@ class ProductControllerTest {
     @DisplayName("POST Requests")
     class PostRequests{
         @Test
+        void testDelete() throws Exception {
+
+            mockMvc.perform(MockMvcRequestBuilders.post("/product/delete")
+                            .param("productId", "eb558e9f-1c39-460e-8860-71af6af63bd6")
+                    ).andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                    .andExpect(MockMvcResultMatchers.redirectedUrl("list"));
+
+            verify(productService, times(1)).delete("eb558e9f-1c39-460e-8860-71af6af63bd6");
+        }
+        @Test
         void createProductPost() throws Exception {
             Product product = new Product();
-            product.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
-            product.setProductName("Sampo Cap Bambang");
-            product.setProductQuantity(100);
+            product.setId("eb558e9f-1c39-460e-8860-71af6af63bd6");
+            product.setName("Sampo Cap Bambang");
+            product.setQuantity(100);
 
             mockMvc.perform(MockMvcRequestBuilders.post("/product/create")
                     .flashAttr("product", product)
@@ -136,16 +132,16 @@ class ProductControllerTest {
         @Test
         void editProductPost() throws Exception {
             Product product = new Product();
-            product.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
-            product.setProductName("Sampo Cap Bambang");
-            product.setProductQuantity(100);
+            product.setId("eb558e9f-1c39-460e-8860-71af6af63bd6");
+            product.setName("Sampo Cap Bambang");
+            product.setQuantity(100);
 
             mockMvc.perform(MockMvcRequestBuilders.post("/product/edit")
                             .flashAttr("product", product)
                     ).andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                     .andExpect(MockMvcResultMatchers.redirectedUrl("list"));
 
-            verify(productService, times(1)).edit(product);
+            verify(productService, times(1)).update(product);
         }
 
     }
