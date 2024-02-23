@@ -34,35 +34,35 @@ public class ProductServiceTest {
     @Test
     void testCreate() {
         Product product = new Product();
-        product.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
-        product.setProductName("Sampo Cap Bambang");
-        product.setProductQuantity(100);
+        product.setId("eb558e9f-1c39-460e-8860-71af6af63bd6");
+        product.setName("Sampo Cap Bambang");
+        product.setQuantity(100);
         when(productRepository.create(product)).thenReturn(product);
         Product created = productService.create(product);
 
-        assertNotNull(created.getProductId());
-        assertEquals(product.getProductId(), created.getProductId());
+        assertNotNull(created.getId());
+        assertEquals(product.getId(), created.getId());
 
-        assertEquals(0, productRepository.findIndexById(product.getProductId()));
+        assertEquals(0, productRepository.findIndexById(product.getId()));
         verify(productRepository, times(1)).create(product);
     }
 
     @Test
     void testFindAll() {
         Product product1 = new Product();
-        product1.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
-        product1.setProductName("Sampo Cap Bambang");
-        product1.setProductQuantity(100);
+        product1.setId("eb558e9f-1c39-460e-8860-71af6af63bd6");
+        product1.setName("Sampo Cap Bambang");
+        product1.setQuantity(100);
 
         Product product2 = new Product();
-        product2.setProductId("a0f9de46-90b1-437d-a0bf-d0821dde9096");
-        product2.setProductName("Sampo Cap Usep");
-        product2.setProductQuantity(50);
+        product2.setId("a0f9de46-90b1-437d-a0bf-d0821dde9096");
+        product2.setName("Sampo Cap Usep");
+        product2.setQuantity(50);
 
         Product product3 = new Product();
-        product3.setProductId("2ff6edb4-5527-4b17-bbdf-92724b61864b");
-        product3.setProductName("Sampo Cap Asap");
-        product3.setProductQuantity(25);
+        product3.setId("2ff6edb4-5527-4b17-bbdf-92724b61864b");
+        product3.setName("Sampo Cap Asap");
+        product3.setQuantity(25);
 
         List<Product> productList = new ArrayList<>();
         productList.add(product1);
@@ -81,9 +81,9 @@ public class ProductServiceTest {
     @Test
     void testFindProductById() {
         Product product = new Product();
-        product.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
-        product.setProductName("Sampo Cap Bambang");
-        product.setProductQuantity(100);
+        product.setId("eb558e9f-1c39-460e-8860-71af6af63bd6");
+        product.setName("Sampo Cap Bambang");
+        product.setQuantity(100);
 
         when(productRepository.findIndexById("eb558e9f-1c39-460e-8860-71af6af63bd6")).thenReturn(2);
 
@@ -97,9 +97,9 @@ public class ProductServiceTest {
     @Test
     void testEdit() {
         Product product = new Product();
-        product.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
-        product.setProductName("Sampo Cap Bambang");
-        product.setProductQuantity(100);
+        product.setId("eb558e9f-1c39-460e-8860-71af6af63bd6");
+        product.setName("Sampo Cap Bambang");
+        product.setQuantity(100);
 
         assertEquals(product, productService.edit(product));
         verify(productRepository, times(1)).editProduct(product);

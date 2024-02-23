@@ -13,7 +13,7 @@ public class ProductRepository {
     private List<Product> productData = new ArrayList<>();
 
     public Product create(Product product) {
-        product.setProductId(String.valueOf(UUID.randomUUID()));
+        product.setId(String.valueOf(UUID.randomUUID()));
         productData.add(product);
         return product;
     }
@@ -26,7 +26,7 @@ public class ProductRepository {
         for (int i = 0; i < productData.size(); i++) {
             Product product = productData.get(i);
 
-            if (product.getProductId().equals(id)) {
+            if (product.getId().equals(id)) {
                 return i;
             }
         }
@@ -38,7 +38,7 @@ public class ProductRepository {
     }
 
     public Product editProduct(Product product) {
-        String id = product.getProductId();
+        String id = product.getId();
         int index = findIndexById(id);
         productData.set(index, product);
         return product;
