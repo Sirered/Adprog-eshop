@@ -34,8 +34,7 @@ public class CarSellerService implements SellerService<Car>{
 
 
     public Car findById(String id){
-        Car car = carRepository.findById(id);
-        return car;
+        return carRepository.findById(id);
     }
 
 

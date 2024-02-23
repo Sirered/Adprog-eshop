@@ -34,8 +34,7 @@ public class ProductSellerServiceImpl implements SellerService<Product>{
 
 
     public Product findById(String id){
-        Product product = productRepository.findById(id);
-        return product;
+        return productRepository.findById(id);
     }
 
 
