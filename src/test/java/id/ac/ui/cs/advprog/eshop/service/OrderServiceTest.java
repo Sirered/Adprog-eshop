@@ -87,7 +87,7 @@ public class OrderServiceTest {
         assertThrows(IllegalArgumentException.class,
                 () -> orderService.updateStatus(order.getId(), "MEOW"));
 
-        verify(orderRepository, times(0)).save(any(Order.class))
+        verify(orderRepository, times(0)).save(any(Order.class));
     }
 
     @Test
