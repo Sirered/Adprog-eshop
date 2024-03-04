@@ -3,12 +3,12 @@ package id.ac.ui.cs.advprog.eshop.enums;
 import lombok.Getter;
 
 @Getter
-public enum ProductStatus {
+public enum PaymentStatus {
     SUCCESS("SUCCESS"),
     REJECTED("REJECTED");
 
     private final String value;
-    private ProductStatus(String value) {
+    private PaymentStatus(String value) {
         this.value = value;
     }
 
