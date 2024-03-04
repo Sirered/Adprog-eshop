@@ -96,9 +96,9 @@ public class PaymentRepositoryTest {
         assertEquals(payments.get(1).getMethod(), paymentList.get(1).getMethod());
         assertEquals(payments.get(1).getPaymentData(), paymentList.get(1).getPaymentData());
         assertEquals(payments.get(1).getStatus(), paymentList.get(1).getStatus());
-        assertEquals(payments.get(2).getId(), paymentList.get(2).getId());
-        assertEquals(payments.get(2).getMethod(), paymentList.get(2).getMethod());
-        assertEquals(payments.get(2).getPaymentData(), paymentList.get(2).getPaymentData());
-        assertEquals(payments.get(2).getStatus(), paymentList.get(2).getStatus());
+        assertEquals(payments.get(0).getId(), paymentList.get(0).getId());
+        assertEquals(payments.get(0).getMethod(), paymentList.get(0).getMethod());
+        assertEquals(payments.get(0).getPaymentData(), paymentList.get(0).getPaymentData());
+        assertEquals(payments.get(0).getStatus(), paymentList.get(0).getStatus());
     }
 }
