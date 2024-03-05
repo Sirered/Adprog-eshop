@@ -91,13 +91,7 @@ public class PaymentServiceImpl implements PaymentService{
         } else if (!voucherCode.startsWith("ESHOP")) {
             status = PaymentStatus.REJECTED.getValue();
         } else {
-            int digitCount = 0;
-            for (int i = 0; i < voucherCode.length(); i++) {
-                char ch = voucherCode.charAt(i);
-                if (Character.isDigit(ch)) {
-                    digitCount++;
-                }
-            }
+            int digitCount = getDigitCount(voucherCode);
 
             if (digitCount != 8) {
                 status = PaymentStatus.REJECTED.getValue();
@@ -106,6 +100,17 @@ public class PaymentServiceImpl implements PaymentService{
             }
         }
         return status;
+    }
+
+    private static int getDigitCount(String voucherCode) {
+        int digitCount = 0;
+        for (int i = 0; i < voucherCode.length(); i++) {
+            char ch = voucherCode.charAt(i);
+            if (Character.isDigit(ch)) {
+                digitCount++;
+            }
+        }
+        return digitCount;
     }
 
     private String payWithBankTransfer(Map<String, String> paymentData) {
