@@ -25,10 +25,12 @@ public class PaymentRepositoryTest {
         payments = new ArrayList<>();
         Map<String, String> paymentData1 = new HashMap<>();
         paymentData1.put("voucherCode", "ESHOP1234ABC5678");
-        Payment successPayment1 = new Payment("13652556-012a-4c07-b546-54eb1396d79b", "voucherCode", paymentData1);
+        Payment successPayment1 = new Payment("13652556-012a-4c07-b546-54eb1396d79b", "voucherCode", paymentData1,
+                PaymentStatus.SUCCESS.getValue());
         payments.add(successPayment1);
         paymentData1.put("voucherCode", "ESHOP12345678");
-        Payment rejectedPayment1 = new Payment("ed2a3070-1c4c-4cb9-81c2-44ca6cfb1c63", "voucherCode", paymentData1);
+        Payment rejectedPayment1 = new Payment("ed2a3070-1c4c-4cb9-81c2-44ca6cfb1c63", "voucherCode", paymentData1,
+                PaymentStatus.REJECTED.getValue());
         payments.add(rejectedPayment1);
     }
 
