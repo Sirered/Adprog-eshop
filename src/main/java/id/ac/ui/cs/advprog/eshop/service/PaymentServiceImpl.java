@@ -86,18 +86,10 @@ public class PaymentServiceImpl implements PaymentService{
             return status;
         }
 
-        if (!(voucherCode.length() == 16)) {
-            status = PaymentStatus.REJECTED.getValue();
-        } else if (!voucherCode.startsWith("ESHOP")) {
+        if (!(voucherCode.length() == 16) || !voucherCode.startsWith("ESHOP") || getDigitCount(voucherCode) != 8) {
             status = PaymentStatus.REJECTED.getValue();
         } else {
-            int digitCount = getDigitCount(voucherCode);
-
-            if (digitCount != 8) {
-                status = PaymentStatus.REJECTED.getValue();
-            } else {
-                status = PaymentStatus.SUCCESS.getValue();
-            }
+            status = PaymentStatus.SUCCESS.getValue();
         }
         return status;
     }
