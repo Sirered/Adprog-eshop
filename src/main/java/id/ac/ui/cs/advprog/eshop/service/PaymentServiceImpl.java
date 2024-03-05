@@ -38,7 +38,7 @@ public class PaymentServiceImpl implements PaymentService{
         Payment payment = new Payment(UUID.randomUUID().toString(), method, paymentData, status);
         if (status == PaymentStatus.SUCCESS.getValue()) {
             order1.setStatus(OrderStatus.SUCCESS.getValue());
-        } else if (status == PaymentStatus.REJECTED.getValue()) {
+        } else {
             order1.setStatus(OrderStatus.FAILED.getValue());
         }
         orderRepository.save(order1);
@@ -58,7 +58,7 @@ public class PaymentServiceImpl implements PaymentService{
         Order order = orderRepository.findById(paymentMapping.get(payment.getId()));
         if (status == PaymentStatus.SUCCESS.getValue()) {
             order.setStatus(OrderStatus.SUCCESS.getValue());
-        } else if (status == PaymentStatus.REJECTED.getValue()) {
+        } else {
             order.setStatus(OrderStatus.FAILED.getValue());
         }
         orderRepository.save(order);
@@ -86,7 +86,7 @@ public class PaymentServiceImpl implements PaymentService{
             return status;
         }
 
-        if (!(voucherCode.length() == 16) || !voucherCode.startsWith("ESHOP") || getDigitCount(voucherCode) != 8) {
+        if (voucherCode.length() != 16 || !voucherCode.startsWith("ESHOP") || getDigitCount(voucherCode) != 8) {
             status = PaymentStatus.REJECTED.getValue();
         } else {
             status = PaymentStatus.SUCCESS.getValue();

@@ -49,8 +49,9 @@ public class PaymentServiceTest {
         Payment successPayment1 = new Payment("13652556-012a-4c07-b546-54eb1396d79b", "voucherCode", paymentData1,
                 PaymentStatus.SUCCESS.getValue());
         payments.add(successPayment1);
-        paymentData1.put("voucherCode", "ESHOP12345678");
-        Payment rejectedPayment1 = new Payment("13652556-012a-4c07-b546-54eb1396d79b", "voucherCode", paymentData1,
+        Map<String,String> paymentData = new HashMap<>();
+        paymentData.put("voucherCode", "ESHOP12345678");
+        Payment rejectedPayment1 = new Payment("13652556-012a-4c07-b546-54eb1396d79b", "voucherCode", paymentData,
                 PaymentStatus.REJECTED.getValue());
         payments.add(rejectedPayment1);
         paymentData2 = new HashMap<>();
@@ -87,6 +88,7 @@ public class PaymentServiceTest {
         verify(paymentRepository, times(1)).save(any(Payment.class));
         verify(orderRepository, times(1)).save(any(Order.class));
         assertEquals(payment.getId(), result.getId());
+        assertEquals(PaymentStatus.SUCCESS.getValue(), result.getStatus());
         assertEquals(order.getId(), paymentService.getPaymentMapping().get(payment.getId()));
     }
     @Test
@@ -101,6 +103,7 @@ public class PaymentServiceTest {
         assertEquals(order.getId(), paymentService.getPaymentMapping().get(payment.getId()));
         verify(paymentRepository, times(1)).save(any(Payment.class));
         verify(orderRepository, times(1)).save(any(Order.class));
+        assertEquals(PaymentStatus.REJECTED.getValue(),result.getStatus());
         assertEquals(payment.getId(), result.getId());
     }
 
