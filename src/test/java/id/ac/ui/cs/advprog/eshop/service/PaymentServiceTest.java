@@ -44,20 +44,22 @@ public class PaymentServiceTest {
     @BeforeEach
     void setUp() {
         payments = new ArrayList<>();
+
         paymentData1 = new HashMap<>();
         paymentData1.put("voucherCode", "ESHOP1234ABC5678");
         Payment successPayment1 = new Payment("13652556-012a-4c07-b546-54eb1396d79b", "voucherCode", paymentData1,
                 PaymentStatus.SUCCESS.getValue());
         payments.add(successPayment1);
+
         Map<String,String> paymentData = new HashMap<>();
         paymentData.put("voucherCode", "ESHOP12345678");
         Payment rejectedPayment1 = new Payment("13652556-012a-4c07-b546-54eb1396d79b", "voucherCode", paymentData,
                 PaymentStatus.REJECTED.getValue());
         payments.add(rejectedPayment1);
+
         paymentData2 = new HashMap<>();
         paymentData2.put("bankName", "BCA");
         paymentData2.put("referenceCode", "9b420ba0-8a05-4fe6-9810-6fd6be40cbb2");
-
 
         List<Product> products = new ArrayList<>();
         Product product1 = new Product();
@@ -79,12 +81,12 @@ public class PaymentServiceTest {
     void testAddPaymentSuccessful() {
         Payment payment = payments.get(0);
         doReturn(payment).when(paymentRepository).save(any(Payment.class));
+
         Order order = orders.get(0);
         doReturn(order).when(orderRepository).findById(order.getId());
-        order.setStatus(OrderStatus.SUCCESS.getValue());
-        doReturn(order).when(orderRepository).save(order);
 
         Payment result = paymentService.addPayment(orders.get(0), payment.getMethod(), payment.getPaymentData());
+
         verify(paymentRepository, times(1)).save(any(Payment.class));
         verify(orderRepository, times(1)).save(any(Order.class));
         assertEquals(payment.getId(), result.getId());
@@ -95,11 +97,12 @@ public class PaymentServiceTest {
     void testAddPaymentRejected() {
         Payment payment = payments.get(1);
         doReturn(payment).when(paymentRepository).save(any(Payment.class));
+
         Order order = orders.get(1);
         doReturn(order).when(orderRepository).findById(order.getId());
-        order.setStatus(OrderStatus.FAILED.getValue());
 
         Payment result = paymentService.addPayment(orders.get(1), payment.getMethod(), payment.getPaymentData());
+
         assertEquals(order.getId(), paymentService.getPaymentMapping().get(payment.getId()));
         verify(paymentRepository, times(1)).save(any(Payment.class));
         verify(orderRepository, times(1)).save(any(Order.class));
@@ -110,7 +113,9 @@ public class PaymentServiceTest {
     @Test
     void testAddPaymentNoSuchOrder() {
         Payment payment = payments.get(1);
+
         Order order = new Order("zczc", orders.get(0).getProducts(), orders.get(0).getOrderTime(), orders.get(0).getAuthor());
+
         doReturn(null).when(orderRepository).findById(order.getId());
         assertThrows(NoSuchElementException.class,
                 () -> paymentService.addPayment(order, payment.getMethod(), payment.getPaymentData()));
@@ -123,8 +128,10 @@ public class PaymentServiceTest {
     void testCreatePaymentByVoucherCodeWrongLength() {
         Order order = orders.get(0);
         doReturn(order).when(orderRepository).findById(order.getId());
+
         paymentData1.put("voucherCode", "ESHOP12345678");
         Payment payment = paymentService.addPayment(orders.get(0), "voucherCode", paymentData1);
+
         assertEquals("13652556-012a-4c07-b546-54eb1396d79b", payment.getId());
         assertEquals("voucherCode", payment.getMethod());
         assertEquals("ESHOP12345678", payment.getPaymentData().get("voucherCode"));
@@ -135,8 +142,10 @@ public class PaymentServiceTest {
     void testCreatePaymentByVoucherCodeDoesNotStartWithEshop() {
         Order order = orders.get(0);
         doReturn(order).when(orderRepository).findById(order.getId());
+
         paymentData1.put("voucherCode", "MOUNTAIN12345678");
         Payment payment = paymentService.addPayment(orders.get(0), "voucherCode", paymentData1);
+
         assertEquals("13652556-012a-4c07-b546-54eb1396d79b", payment.getId());
         assertEquals("voucherCode", payment.getMethod());
         assertEquals("MOUNTAIN12345678", payment.getPaymentData().get("voucherCode"));
@@ -147,8 +156,10 @@ public class PaymentServiceTest {
     void testCreatePaymentByVoucherCodeWrongAmountOfDigits() {
         Order order = orders.get(0);
         doReturn(order).when(orderRepository).findById(order.getId());
+
         paymentData1.put("voucherCode", "ESHOP1234ABCD567");
         Payment payment = paymentService.addPayment(orders.get(0), "voucherCode", paymentData1);
+
         assertEquals("13652556-012a-4c07-b546-54eb1396d79b", payment.getId());
         assertEquals("voucherCode", payment.getMethod());
         assertEquals("ESHOP1234ABCD567", payment.getPaymentData().get("voucherCode"));
@@ -159,8 +170,10 @@ public class PaymentServiceTest {
     void testCreatePaymentByVoucherCodeLowered() {
         Order order = orders.get(0);
         doReturn(order).when(orderRepository).findById(order.getId());
+
         paymentData1.put("voucherCode", "eshop1234abc5678");
         Payment payment = paymentService.addPayment(orders.get(0), "voucherCode", paymentData1);
+
         assertEquals("13652556-012a-4c07-b546-54eb1396d79b", payment.getId());
         assertEquals("voucherCode", payment.getMethod());
         assertEquals("eshop1234abc5678", payment.getPaymentData().get("voucherCode"));
@@ -171,8 +184,10 @@ public class PaymentServiceTest {
     void testCreatePaymentByVoucherCodeNullVoucher() {
         Order order = orders.get(0);
         doReturn(order).when(orderRepository).findById(order.getId());
+
         paymentData1.put("voucherCode", null);
         Payment payment = paymentService.addPayment(orders.get(0), "voucherCode", paymentData1);
+
         assertEquals("13652556-012a-4c07-b546-54eb1396d79b", payment.getId());
         assertEquals("voucherCode", payment.getMethod());
         assertNull(payment.getPaymentData().get("voucherCode"));
@@ -183,6 +198,7 @@ public class PaymentServiceTest {
     void testCreatePaymentByVoucherNotInData() {
         Order order = orders.get(0);
         doReturn(order).when(orderRepository).findById(order.getId());
+
         assertThrows(IllegalArgumentException.class,
                 () -> paymentService.addPayment(orders.get(0), "voucherCode", paymentData2));
     }
@@ -191,7 +207,9 @@ public class PaymentServiceTest {
     void testCreatePaymentByBankTransferCorrect() {
         Order order = orders.get(0);
         doReturn(order).when(orderRepository).findById(order.getId());
+
         Payment payment = paymentService.addPayment(orders.get(0), "bankTransfer", paymentData2);
+
         assertEquals("13652556-012a-4c07-b546-54eb1396d79b", payment.getId());
         assertEquals("bankTransfer", payment.getMethod());
         assertEquals("BCA", payment.getPaymentData().get("bankName"));
@@ -202,8 +220,10 @@ public class PaymentServiceTest {
     void testCreatePaymentByBankTransferEmptyBankName() {
         Order order = orders.get(0);
         doReturn(order).when(orderRepository).findById(order.getId());
+
         paymentData2.put("bankName", "");
         Payment payment = paymentService.addPayment(orders.get(0), "bankTransfer", paymentData2);
+
         assertEquals("13652556-012a-4c07-b546-54eb1396d79b", payment.getId());
         assertEquals("bankTransfer", payment.getMethod());
         assertEquals("", payment.getPaymentData().get("bankName"));
@@ -215,8 +235,10 @@ public class PaymentServiceTest {
     void testCreatePaymentByBankTransferNullBankName() {
         Order order = orders.get(0);
         doReturn(order).when(orderRepository).findById(order.getId());
+
         paymentData2.put("bankName", null);
         Payment payment = paymentService.addPayment(orders.get(0), "bankTransfer", paymentData2);
+
         assertEquals("13652556-012a-4c07-b546-54eb1396d79b", payment.getId());
         assertEquals("bankTransfer", payment.getMethod());
         assertNull(payment.getPaymentData().get("bankName"));
@@ -227,8 +249,10 @@ public class PaymentServiceTest {
     void testCreatePaymentByBankTransferEmptyReferenceCode() {
         Order order = orders.get(0);
         doReturn(order).when(orderRepository).findById(order.getId());
+
         paymentData2.put("referenceCode", "");
         Payment payment = paymentService.addPayment(orders.get(0), "bankTransfer", paymentData2);
+
         assertEquals("13652556-012a-4c07-b546-54eb1396d79b", payment.getId());
         assertEquals("bankTransfer", payment.getMethod());
         assertEquals("BCA", payment.getPaymentData().get("bankName"));
@@ -240,8 +264,10 @@ public class PaymentServiceTest {
     void testCreatePaymentByBankTransferNullReferenceCode() {
         Order order = orders.get(0);
         doReturn(order).when(orderRepository).findById(order.getId());
+
         paymentData2.put("referenceCode", null);
         Payment payment = paymentService.addPayment(orders.get(0), "bankTransfer", paymentData2);
+
         assertEquals("13652556-012a-4c07-b546-54eb1396d79b", payment.getId());
         assertEquals("bankTransfer", payment.getMethod());
         assertEquals("BCA", payment.getPaymentData().get("bankName"));
@@ -253,8 +279,10 @@ public class PaymentServiceTest {
     void testCreatePaymentByBankTransferNoBank() {
         Order order = orders.get(0);
         doReturn(order).when(orderRepository).findById(order.getId());
+
         Map<String, String> paymentData = new HashMap<>();
         paymentData.put("referenceCode", "9b420ba0-8a05-4fe6-9810-6fd6be40cbb2");
+
         assertThrows(IllegalArgumentException.class,
                 () -> paymentService.addPayment(orders.get(0), "bankTransfer", paymentData));
     }
@@ -262,8 +290,10 @@ public class PaymentServiceTest {
     void testCreatePaymentByBankTransferNoReferenceCode() {
         Order order = orders.get(0);
         doReturn(order).when(orderRepository).findById(order.getId());
+
         Map<String, String> paymentData = new HashMap<>();
         paymentData.put("bankName", "BCA");
+
         assertThrows(IllegalArgumentException.class,
                 () -> paymentService.addPayment(orders.get(0), "bankTransfer", paymentData));
     }
@@ -272,6 +302,7 @@ public class PaymentServiceTest {
     void testCreatePaymentInvalidMethodName() {
         Order order = orders.get(0);
         doReturn(order).when(orderRepository).findById(order.getId());
+
         assertThrows(IllegalArgumentException.class,
                 () -> paymentService.addPayment(orders.get(0), "bank", paymentData2));
     }
@@ -281,15 +312,16 @@ public class PaymentServiceTest {
         Payment payment = payments.get(1);
         Order order = orders.get(1);
         order.setStatus(OrderStatus.SUCCESS.getValue());
+
         doReturn(payment).when(paymentRepository).getPayment(payment.getId());
         doReturn(order).when(orderRepository).findById(order.getId());
         paymentService.addPayment(order, payment.getMethod(),payment.getPaymentData());
+
         payment.setStatus(PaymentStatus.SUCCESS.getValue());
         doReturn(payment).when(paymentRepository).save(any(Payment.class));
         doReturn(order).when(orderRepository).findById(order.getId());
-
-
         Payment result = paymentService.setStatus(payment, PaymentStatus.SUCCESS.getValue());
+
         assertEquals(payment.getId(), result.getId());
         assertEquals(PaymentStatus.SUCCESS.getValue(), result.getStatus());
         verify(paymentRepository, times(1)).getPayment(payment.getId());
@@ -302,15 +334,16 @@ public class PaymentServiceTest {
         Payment payment = payments.get(0);
         Order order = orders.get(0);
         order.setStatus(OrderStatus.FAILED.getValue());
+
         doReturn(payment).when(paymentRepository).getPayment(payment.getId());
         doReturn(order).when(orderRepository).findById(order.getId());
         paymentService.addPayment(order, payment.getMethod(),payment.getPaymentData());
+
         payment.setStatus(PaymentStatus.REJECTED.getValue());
         doReturn(payment).when(paymentRepository).save(any(Payment.class));
         doReturn(order).when(orderRepository).save(order);
-
-
         Payment result = paymentService.setStatus(payment, PaymentStatus.REJECTED.getValue());
+
         assertEquals(payment.getId(), result.getId());
         assertEquals(PaymentStatus.REJECTED.getValue(), result.getStatus());
         verify(paymentRepository, times(1)).getPayment(payment.getId());
@@ -321,20 +354,21 @@ public class PaymentServiceTest {
     @Test
     void testUpdateStatusInvalidStatus() {
         Payment payment = payments.get(1);
+
         doReturn(payment).when(paymentRepository).getPayment(payment.getId());
+
         assertThrows(IllegalArgumentException.class,
                 () -> paymentService.setStatus(payment, "MEOW"));
-
         verify(paymentRepository, times(0)).save(any(Payment.class));
     }
 
     @Test
     void testUpdateStatusInvalidPaymentId() {
         doReturn(null).when(paymentRepository).getPayment("zczc");
+
         Payment payment = new Payment("zczc", "voucherCode", paymentData1);
         assertThrows(NoSuchElementException.class,
                 () -> paymentService.setStatus(payment, OrderStatus.SUCCESS.getValue()));
-
         verify(paymentRepository, times(0)).save(any(Payment.class));
     }
 
@@ -356,6 +390,7 @@ public class PaymentServiceTest {
     @Test
     void testGetAllPayment() {
         doReturn(payments).when(paymentRepository).getAllPayments();
+        
         List<Payment> results = paymentService.getAllPayments();
         for (int i = 0; i < payments.size(); i++) {
             assertEquals(payments.get(i).getId(), results.get(i).getId());
