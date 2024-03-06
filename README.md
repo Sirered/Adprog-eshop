@@ -160,7 +160,7 @@ _____________
 
 ## Reflection
 
-#### Percival's questions
+### Percival's questions
 
 **Do I have enough functional tests to reassure myself that my application really works, from the point of view of the user?**
 
@@ -201,3 +201,15 @@ Yes, all tests have been split up into different layers, so if I want to test on
 **Am I spending too much time waiting for tests to run, and thus less time in a productive flow state?**
 
 With the use of mocking and doReturns, I am able to split up my tests so that they are bite sized and specific, so once a test fails I immediately know the method(s) and case(s) that is causing the error, plus it makes the test run take no longer than 3 seconds (most of which is just initialisation). With the help of gradle, I am able to run all tests at once by just doing run eshop_tests, so for now it doesn't hinder productive workflow much. For bigger projects, I might consider just letting the CI/CD run the tests and I check the results of the tests from time to time on my github instead, so while the tests are running, I can still continue working.
+
+### Does it implement FIRST
+
+**Fast:** Yes, it takes no more than 3 seconds to run all of my tests, with the help of mocking and how the tests were designed to test only one specific aspect of a method each.
+
+**Isolated:** Yes, the tests don't depend on any data or changes made in other tests. The state of the repository or service is defined in each test using mocking and doReturn and all other data is taken from the setUp which is reinitialised before every test.
+
+**Repeatable** Yes, since the methods being tsted don't interact with external services, nor do they have any random aspects (like there are no random UUID), they aren't affected by external circumstances. Furthermore, due to the tests being isolated, they aren't affected by other tests either.
+
+**Self-Validating** Yes, since every test has assertions (to assert the state of the outputs is correct). If a method MUST be called x times for the method being tested to work the test verifies that that method is run x amount of times. If a method MUST NOT be called at all due to the occurrence of an unhappy path, the test verifies that it runs 0 times. If a method being tested is supposed to throw an error due to an unhappy test, there is an assertion asserting the error that should be thrown. If a test fails, it will tell us at what assertion does it fail at so it is not ambiguous why it failed.
+
+**Thorough/Timely:** Yes, all tests were made before implementation and covers all edge cases I can think of, happy and unhappy. Like setting a valid status, setting an invalid status, finding order successfully, finding order unsuccessfully, making an order without specifying status, making an order with specifying status, making an order with an invalid status etc. 
