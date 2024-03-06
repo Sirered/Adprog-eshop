@@ -155,3 +155,61 @@ Firstly, without SOLID, specifically if we didn't think about ISP, it is possibl
 
 Secondly, without SOLID, there would be less consideration in keeping interaction between methods to be consistent, causing minor inconsistencies in one part of the project. Like originally I would just replace the item in the list with the updated item from the form in Product, while in car it set the values onto the item in the list. At some point this may cause an error when doing comparison for example, where it returns correct values when I'm comparing edited cars, but not for when I'm comparing edited Products, which would cause me to go insane trying to find what went wrong. Having it so that implementation is consistent and follow strict contracts is important to establish early on before the project gets too big. In fact during the conversion to solid, I was dealing with inconsistent naming of methods (like sometimes it would findByCarId and sometimes it would be findWithId), due to the absence of the use of interfaces to facilitate communication between layers, causing me confusion when trying to connect one layer to another, causing possible minor mishaps. Now that I have implemented DIP and LSP that is less of a concern.
 
+_____________
+## Module 4
+
+## Reflection
+
+### Percival's questions
+
+**Do I have enough functional tests to reassure myself that my application really works, from the point of view of the user?**
+
+Not at all. There are no functional tests thus fae, because we haven't even gotten to implementing the controller that would allow user interaction. However, if we ignore that and look at the unit tests that we have made, I think that they do test the interactions between the classe that are necessary to facilitate the whole user experience. For example in the OrderService tests, we have tests that check if we are correctly invoking orderRepository methods. There are also tests for methods that just return the result from a lower level, but that's also part of ensuring the whole experience works properly, because there's a chance that we may refactor orderRepository methods such as findAllByAuthor differently. We would likely be steadfast and make sure that the new implementation works with our repository tests, forgetting the impact on the service layer. Thus, the fact that we are testing scenarios that are handled by other classes helps ensures that the whole system remains cohesive and correct.
+
+To improve in this regard, we would probably actually have to continue to making the controller to get a proper evaluation of how our program functions from the view of a user.
+
+**Am I testing all the edge cases thoroughly?**
+
+I believe that the tests that have been made covers as many edge cases as possible. One could consider that you could test setting status with all statuses available, but that would be redundant and would likely decrease the maintainability of our tests since that would mean that every method involving status has to have 4 variants each, one for each status, which is an absurd amount of tests that practically test the same thing. We already have testing for if the status is valid or not, we've tested when errors should be thrown, we've tested all happy and unhappy tests that one could think of for the order implementation. In my opinion all edge cases have been sufficiently covered, though a second opinion would likely be necessary to ensure that the tests provided are enough.
+
+There is the issue that the builder for order isn't tested at all, however as of right now the builder functions aren't in use anywhere in the program. One might say that we should just test it regardless in case it comes up later, but as this is an individual project (for now) I will hold off on testing unused methods until they are actually used and relevant for the rest of the program. I'm actually tempted to remove the @Builder annotation to ensure that I don't start building with untested methods. If this was a group project or a project to be distributed to others and I was required to add the @Builder, then I would consider adding tests for the builder, so that my collaborators would be free to use every part of the Order class in their own implementation with the knowledge that everything regarding the order feature has been tested and implemented correctly. 
+
+**Do I have tests that check whether all my components fit together properly? Could some integrated tests do this, or are functional tests enough?**
+
+As mentioned in my answer to the first question, I do believe that the unit tests does provide adequate testing regarding the interaction between different layers of the program. They test when the methods of other classes are called, they test methods that are handled entirely by other classes and they test different scenarios according to the output of the other classes (for example there is a service test that tests when orderRepository.findById outputs an order and another when it outputs null). Obviously, it would still be preferable to have some functional and integrated tests to really test the full program, but the tests we have are sufficient for testing how the components we currently have fits together. Plus, the controller hasn't been implemented yet, so it isn't really possible to make any functional or integrated tests.
+
+**Are my tests giving me the confidence to refactor my code, fearlessly and frequently?**
+
+Yes, the tests that I have right now cover all edge cases I can think of and all contain meaningful assertion that test a different path that could occur. Like when you logically think that the output should have the same id as the input, the test for such will assert that the id is the same. If you expect an error from a certain input, it will assert that an error will be thrown. If logically the calling of one method should call another method an expected amount of times, then there is a line verifying that it does such. Due to the tests covering all edge cases and asserting the value of outputs and the occurence of method calls and errors, I don't have much reason to fear any refactoring I do. Plus, the tests aren't too tied to the implementation of the methods. For example all verifies only verify method calls that MUST or MUST NOT happen for the function to work properly. There are no verifies for method calls that can be replaced/removed depending on implementation.
+
+**Are my tests helping me to drive out a good design? If I have a lot of integration tests but less unit tests, do I need to make more unit tests to get better feedback on my code design?**
+
+All parts of the Order feature has been tested thoroughly, even covering cases that technically shouldn't happen if the controller and interface are made properly (like order not existing shouldn't occur, as we would only give the ability to view orders in the database, and we don't have a delete function). Due to this thorough testing of the components of the feature, I think that I get adequate feedback of my code design, allowing me to easily pinpoint parts of my code that are causing errors when any changes are introduced.
+
+**Are my feedback cycles as fast as I would like them? When do I get warned about bugs, and is there any practical way to make that happen sooner?**
+
+Due to the CI/CD implemented previously, I get notified about bugs in my code, and possible violations of common code practices on every push to github. However, I have gotten into the flow of running my tests after every time I write or update a method (or group of methods if they are all small), so in reality I get feedback much sooner, allowing me to inspect and fix the issues causing test failure (or refactor my tests if I recognise that there is a problem with the test itself, like being too coupled to implementation). Since I've been trying to use TDD since I learnt about it, all my tests are made before implementation, thus as soon as I implement a method, I get instant feedback regarding the correctness of my method (or the incorrectness of my tests as I am still getting used to making tests). 
+
+**Is there some way that I could write faster integration tests that would get me feedback quicker?**
+
+No, there are no integration tests. If I was facing such a problem, I would most likely isolate my tests more, mock data and services rather than go through all of the functions to set up the data and optimal setUp (like setup the data so that it can be reused for each test, just cleaning the data up back to the initial, instead of restarting everything every time
+
+**Can I run a subset of the full test suite when I need to?**
+
+Yes, all tests have been split up into different layers, so if I want to test only the service layer of the Order features, I can just run the service tests only. I could split it up for each method, specifically since the addPayment tests takes up a large portion of the tests, but I want to keep the addPayment tests in the same suite as all the other service layer tests, because they are still related, and the setUp would be more or less the same.
+
+**Am I spending too much time waiting for tests to run, and thus less time in a productive flow state?**
+
+With the use of mocking and doReturns, I am able to split up my tests so that they are bite sized and specific, so once a test fails I immediately know the method(s) and case(s) that is causing the error, plus it makes the test run take no longer than 3 seconds (most of which is just initialisation). With the help of gradle, I am able to run all tests at once by just doing run eshop_tests, so for now it doesn't hinder productive workflow much. For bigger projects, I might consider just letting the CI/CD run the tests and I check the results of the tests from time to time on my github instead, so while the tests are running, I can still continue working.
+
+### Does it implement FIRST
+
+**Fast:** Yes, it takes no more than 3 seconds to run all of my tests, with the help of mocking and how the tests were designed to test only one specific aspect of a method each.
+
+**Isolated:** Yes, the tests don't depend on any data or changes made in other tests. The state of the repository or service is defined in each test using mocking and doReturn and all other data is taken from the setUp which is reinitialised before every test.
+
+**Repeatable** Yes, since the methods being tsted don't interact with external services, nor do they have any random aspects (like there are no random UUID), they aren't affected by external circumstances. Furthermore, due to the tests being isolated, they aren't affected by other tests either.
+
+**Self-Validating** Yes, since every test has assertions (to assert the state of the outputs is correct). If a method MUST be called x times for the method being tested to work the test verifies that that method is run x amount of times. If a method MUST NOT be called at all due to the occurrence of an unhappy path, the test verifies that it runs 0 times. If a method being tested is supposed to throw an error due to an unhappy test, there is an assertion asserting the error that should be thrown. If a test fails, it will tell us at what assertion does it fail at so it is not ambiguous why it failed.
+
+**Thorough/Timely:** Yes, all tests were made before implementation and covers all edge cases I can think of, happy and unhappy. Like setting a valid status, setting an invalid status, finding order successfully, finding order unsuccessfully, making an order without specifying status, making an order with specifying status, making an order with an invalid status etc. 
